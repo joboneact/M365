@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>How to Run M Language Code in Power BI</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 2em; }
+        h1, h2 { color: #2a4b7c; }
+        code, pre { background: #f4f4f4; padding: 2px 6px; border-radius: 4px; }
+        ul { margin-bottom: 1em; }
+    </style>
+</head>
+<body>
+    <h1>How to Run M Language Code in Power BI</h1>
+    <p>
+        M language (Power Query Formula Language) is used in Power BI, Excel, and other Microsoft products to shape, transform, and load data. This guide explains how to run M code and provides tips for writing effective M queries in Power BI.
+    </p>
+
+    <h2>Running M Code in Power BI Desktop</h2>
+    <ol>
+        <li>Open <strong>Power BI Desktop</strong>.</li>
+        <li>Go to the <strong>Home</strong> tab and click <strong>Transform data</strong> to open the Power Query Editor.</li>
+        <li>In Power Query Editor, click <strong>Home &gt; Advanced Editor</strong>.</li>
+        <li>Paste your M code into the editor window.</li>
+        <li>Click <strong>Done</strong> to apply the code and preview the results.</li>
+        <li>Click <strong>Close &amp; Apply</strong> to load the transformed data into Power BI.</li>
+    </ol>
+
+    <h2>Tips for Writing M Language Code for Power BI</h2>
+    <ul>
+        <li>
+            <strong>Use Descriptive Step Names:</strong> Rename each step for clarity. For example, <code>ExpandedTasks</code> or <code>FilteredRows</code>.
+        </li>
+        <li>
+            <strong>Comment Your Code:</strong> Use <code>//</code> for single-line comments to explain complex logic.
+        </li>
+        <li>
+            <strong>Keep Queries Modular:</strong> Break complex transformations into multiple steps for easier debugging and maintenance.
+        </li>
+        <li>
+            <strong>Preview Data Frequently:</strong> Use the Power Query Editor’s preview to check each step’s output.
+        </li>
+        <li>
+            <strong>Handle Errors Gracefully:</strong> Use functions like <code>try ... otherwise</code> to manage unexpected data issues.
+        </li>
+        <li>
+            <strong>Use Built-in Functions:</strong> Leverage Power Query’s rich library of functions for text, date, and table operations.
+        </li>
+        <li>
+            <strong>Parameterize File Paths:</strong> Use parameters for file paths or URLs to make queries portable and easier to update.
+        </li>
+        <li>
+            <strong>Document Data Sources:</strong> Clearly indicate where your data is coming from (e.g., file path, web URL, database).
+        </li>
+    </ul>
+
+    <h2>Example: Loading and Expanding Planner JSON Data</h2>
+    <pre><code>let
+    Source = Json.Document(File.Contents("c:\Davis\Projects\M365\Power BI\SamplePlanner.json")),
+    TasksTable = Table.FromList(Source, Splitter.SplitByNothing(), {"Task"}, null, ExtraValues.Error),
+    ExpandedTasks = Table.ExpandRecordColumn(TasksTable, "Task", {"id", "title", "assignedTo", "dueDate", "bucketId"}),
+    ExpandedAssignedTo = Table.ExpandListColumn(ExpandedTasks, "assignedTo"),
+    ExpandedUser = Table.ExpandRecordColumn(ExpandedAssignedTo, "assignedTo", {"userId", "displayName", "email"})
+in
+    ExpandedUser
+    </code></pre>
+
+    <h2>Additional Resources</h2>
+    <ul>
+        <li><a href="https://learn.microsoft.com/powerquery-m/">Microsoft Power Query M Language Reference</a></li>
+        <li><a href="https://learn.microsoft.com/power-bi/transform-model/desktop-query-overview">Power BI Query Overview</a></li>
+        <li><a href="https://learn.microsoft.com/power-bi/transform-model/desktop-query-parameters">Using Parameters in Power BI</a></li>
+    </ul>
+</body>
+</html>
